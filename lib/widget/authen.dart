@@ -9,20 +9,48 @@ class Authen extends StatefulWidget {
 }
 
 class _AuthenState extends State<Authen> {
+  bool statusRedEye = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment(0, -0.3),
+            radius: 0.8,
+            colors: <Color>[Colors.white, Colors.black],
+          ),
+        ),
+        child: Center(
+            child: SingleChildScrollView(
           child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          buildlogo(),
-          buildAppName(),
-          buildUser(),
-          buildPassword(),
-        ],
-      )),
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildlogo(),
+              buildAppName(),
+              buildUser(),
+              buildPassword(),
+              buildLogin(),
+              buildRegister()
+            ],
+          ),
+        )),
+      ),
     );
+  }
+
+  TextButton buildRegister() => TextButton(
+      onPressed: () {
+        Navigator.pushNamed(context, '/register');
+      },
+      child: Text('New Register'));
+
+  Container buildLogin() {
+    return Container(
+        width: 250,
+        margin: EdgeInsets.only(top: 16),
+        child: ElevatedButton(onPressed: () {}, child: Text('login')));
   }
 
   Container buildPassword() {
@@ -32,10 +60,20 @@ class _AuthenState extends State<Authen> {
       margin: EdgeInsets.all(16),
       child: TextField(
         decoration: InputDecoration(
+          suffixIcon: IconButton(
+            icon: Icon(Icons.remove_red_eye),
+            onPressed: () {
+              setState(() {
+                statusRedEye = !statusRedEye;
+              });
+              print('object statusRedEye = $statusRedEye');
+            },
+          ),
+          prefixIcon: Icon(Icons.vpn_key),
           border: OutlineInputBorder(),
           hintText: 'password',
         ),
-        obscureText: true,
+        obscureText: statusRedEye,
       ),
     );
   }
@@ -46,7 +84,7 @@ class _AuthenState extends State<Authen> {
       margin: EdgeInsets.only(top: 16),
       child: TextField(
         decoration: InputDecoration(
-            prefixIcon: Icon(Icons.font_download),
+            prefixIcon: Icon(Icons.info),
             border: OutlineInputBorder(),
             hintText: 'username'),
       ),
@@ -54,7 +92,7 @@ class _AuthenState extends State<Authen> {
   }
 
   Text buildAppName() => Text('Wind AIC App',
-      style: GoogleFonts.sedgwickAveDisplay(
+      style: GoogleFonts.bungeeOutline(
           textStyle: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w700,
