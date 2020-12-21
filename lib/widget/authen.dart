@@ -1,4 +1,7 @@
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Authen extends StatefulWidget {
   @override
@@ -15,19 +18,48 @@ class _AuthenState extends State<Authen> {
         children: [
           buildlogo(),
           buildAppName(),
+          buildUser(),
+          buildPassword(),
         ],
       )),
     );
   }
 
-  Text buildAppName() => Text(
-        'Wind AIC App',
-        style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-            color: Colors.red.shade500,
-            fontStyle: FontStyle.italic),
-      );
+  Container buildPassword() {
+    return Container(
+      width: 250,
+      // margin: EdgeInsets.only(top: 16),
+      margin: EdgeInsets.all(16),
+      child: TextField(
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          hintText: 'password',
+        ),
+        obscureText: true,
+      ),
+    );
+  }
+
+  Container buildUser() {
+    return Container(
+      width: 250,
+      margin: EdgeInsets.only(top: 16),
+      child: TextField(
+        decoration: InputDecoration(
+            prefixIcon: Icon(Icons.font_download),
+            border: OutlineInputBorder(),
+            hintText: 'username'),
+      ),
+    );
+  }
+
+  Text buildAppName() => Text('Wind AIC App',
+      style: GoogleFonts.sedgwickAveDisplay(
+          textStyle: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: Colors.red.shade500,
+              fontStyle: FontStyle.italic)));
 
   Container buildlogo() =>
       Container(width: 150, child: Image.asset('images/logo.png'));
