@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown
     ]);
     return MaterialApp(
+      theme: ThemeData(primarySwatch: Colors.deepOrange),
       debugShowCheckedModeBanner: false,
       // home: Authen(),
       routes: routes,
