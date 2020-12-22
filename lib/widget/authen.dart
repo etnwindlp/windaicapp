@@ -1,7 +1,14 @@
 //import 'dart:html';
 
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:windaicapp/models/usermodel.dart';
+import 'package:windaicapp/utility/dialog.dart';
+import 'package:windaicapp/utility/myconstant.dart';
+import 'package:windaicapp/utility/mystyle.dart';
 
 //stf
 class Authen extends StatefulWidget {
@@ -10,7 +17,9 @@ class Authen extends StatefulWidget {
 }
 
 class _AuthenState extends State<Authen> {
-  bool statusRedEye = true;
+  bool statusRedEye = true, statusProgress = true;
+  String user, password;
+  int count = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -23,22 +32,31 @@ class _AuthenState extends State<Authen> {
             colors: <Color>[Colors.white, Colors.black],
           ),
         ),
-        child: Center(
-            child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              buildlogo(),
-              buildAppName(),
-              buildUser(),
-              buildPassword(),
-              buildLogin(),
-              buildRegister()
-            ],
-          ),
-        )),
+        child: Stack(
+          children: [
+            buildContent(),
+            statusProgress ? SizedBox() : Mystyle().showProgress(),
+          ],
+        ),
       ),
     );
+  }
+
+  Center buildContent() {
+    return Center(
+        child: SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          buildlogo(),
+          buildAppName(),
+          buildUser(),
+          buildPassword(),
+          buildLogin(),
+          buildRegister()
+        ],
+      ),
+    ));
   }
 
   TextButton buildRegister() => TextButton(
@@ -51,7 +69,18 @@ class _AuthenState extends State<Authen> {
     return Container(
         width: 250,
         margin: EdgeInsets.only(top: 16),
-        child: ElevatedButton(onPressed: () {}, child: Text('login')));
+        child: ElevatedButton(
+            onPressed: () {
+              if ((user?.isEmpty ?? true) || (password?.isEmpty ?? true)) {
+                normalDialog(context, 'pls insert username or password');
+              } else {
+                setState(() {
+                  statusProgress = false;
+                });
+                checkAuthen();
+              }
+            },
+            child: Text('login')));
   }
 
   Container buildPassword() {
@@ -60,6 +89,7 @@ class _AuthenState extends State<Authen> {
       // margin: EdgeInsets.only(top: 16),
       margin: EdgeInsets.all(16),
       child: TextField(
+        onChanged: (value) => password = value.trim(),
         decoration: InputDecoration(
           suffixIcon: IconButton(
             icon: Icon(Icons.remove_red_eye),
@@ -84,6 +114,7 @@ class _AuthenState extends State<Authen> {
       width: 250,
       margin: EdgeInsets.only(top: 16),
       child: TextField(
+        onChanged: (value) => user = value.trim(),
         decoration: InputDecoration(
             prefixIcon: Icon(Icons.info),
             border: OutlineInputBorder(),
@@ -102,4 +133,44 @@ class _AuthenState extends State<Authen> {
 
   Container buildlogo() =>
       Container(width: 150, child: Image.asset('images/logo.png'));
+
+  Future<Null> checkAuthen() async {
+    String path =
+        '${MyConstant().domian}/aic/getUserWhereUser.php?isAdd=true&user=$user&password=$password';
+
+    await Dio().get(path).then((value) {
+      if (value.toString() == 'null') {
+        setState(() {
+          statusProgress = true;
+        });
+        normalDialog(context, 'Does have $user on database.');
+        count++;
+        checkCount();
+      } else {
+        print('value = $value');
+        var result = json.decode(value.data);
+        print('$result');
+        for (var item in result) {
+          print('item = $item');
+          UserModel model = UserModel.fromMap(item);
+          if (password == model.password) {
+            print('Login success');
+          } else {
+            setState(() {
+              statusProgress = true;
+            });
+            normalDialog(context, 'Password Incorrected.');
+            count++;
+            checkCount();
+          }
+        }
+      }
+    });
+  }
+
+  void checkCount() {
+    if (count >= 4) {
+      normalDialog(context, 'Login incorrected more then 5 times.');
+    }
+  }
 }

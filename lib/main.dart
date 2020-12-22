@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:windaicapp/router.dart';
-import 'package:windaicapp/widget/authen.dart';
+// import 'package:windaicapp/widget/authen.dart';
 
 void main() {
   runApp(MyApp());
