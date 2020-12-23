@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:windaicapp/models/usermodel.dart';
 import 'package:windaicapp/utility/dialog.dart';
 import 'package:windaicapp/utility/myconstant.dart';
@@ -138,7 +139,7 @@ class _AuthenState extends State<Authen> {
     String path =
         '${MyConstant().domian}/aic/getUserWhereUser.php?isAdd=true&user=$user&password=$password';
 
-    await Dio().get(path).then((value) {
+    await Dio().get(path).then((value) async {
       if (value.toString() == 'null') {
         setState(() {
           statusProgress = true;
@@ -155,6 +156,28 @@ class _AuthenState extends State<Authen> {
           UserModel model = UserModel.fromMap(item);
           if (password == model.password) {
             print('Login success');
+
+            SharedPreferences preferences =
+                await SharedPreferences.getInstance();
+            preferences.setString(MyConstant().keyName, model.name);
+            preferences.setString(MyConstant().keyType, model.typeuser);
+            preferences.setString('id', model.id);
+
+            switch (model.typeuser) {
+              case 'user':
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/serviceuser', (route) => false);
+
+                break;
+
+              case 'officer':
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/serviceofficer', (route) => false);
+
+                break;
+
+              default:
+            }
           } else {
             setState(() {
               statusProgress = true;
