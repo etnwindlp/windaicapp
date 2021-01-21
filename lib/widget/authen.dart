@@ -137,7 +137,7 @@ class _AuthenState extends State<Authen> {
 
   Future<Null> checkAuthen() async {
     String path =
-        '${MyConstant().domian}/aic/getUserWhereUser.php?isAdd=true&user=$user&password=$password';
+        '${MyConstant().domain}/aic/getUserWhereUser.php?isAdd=true&user=$user&password=$password';
 
     await Dio().get(path).then((value) async {
       if (value.toString() == 'null') {

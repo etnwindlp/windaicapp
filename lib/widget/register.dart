@@ -152,7 +152,7 @@ class _RegisterState extends State<Register> {
 
   Future<Null> checkUser() async {
     String path =
-        '${MyConstant().domian}/aic/getUserWhereUser.php?isAdd=true&user=$user';
+        '${MyConstant().domain}/aic/getUserWhereUser.php?isAdd=true&user=$user';
 
     await Dio().get(path).then((value) {
       // print('value = $value');
@@ -166,7 +166,7 @@ class _RegisterState extends State<Register> {
 
   Future<Null> insertUser() async {
     String path =
-        '${MyConstant().domian}/aic/addUserUng.php?isAdd=true&user=$user&name=$name&password=$password&typeuser=$typeUser';
+        '${MyConstant().domain}/aic/addUserUng.php?isAdd=true&user=$user&name=$name&password=$password&typeuser=$typeUser';
 
     await Dio().get(path).then((value) {
       if (value.toString() == 'true') {

@@ -1,5 +1,5 @@
 class MyConstant {
-  String domian = 'https://ddbb0f120341.ngrok.io';
+  String domain = 'https://250ee8df6e1f.ngrok.io';
 
   String keyName = 'name';
   String keyType = 'type';

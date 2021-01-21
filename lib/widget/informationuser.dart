@@ -30,7 +30,7 @@ class _InformationUserState extends State<InformationUser> {
     print('idLogin = $idLogin');
 
     String path =
-        '${MyConstant().domian}/aic/getUserWhereId.php?isAdd=true&id=$idLogin';
+        '${MyConstant().domain}/aic/getUserWhereId.php?isAdd=true&id=$idLogin';
     await Dio().get(path).then((value) {
       print('value ==> $value');
       var result = json.decode(value.data);
