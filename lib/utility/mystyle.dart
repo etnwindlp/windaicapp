@@ -2,6 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Mystyle {
+  TextStyle titleStyle() => TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      );
+
+  TextStyle contentStyle() => TextStyle(
+        fontSize: 16,
+      );
+
+  TextStyle colortStyle(Color color) => TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w700,
+        color: color,
+      );
+
   Widget showProgress() => Center(
           child: CircularProgressIndicator(
         backgroundColor: Colors.white,

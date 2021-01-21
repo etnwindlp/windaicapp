@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:windaicapp/utility/myconstant.dart';
 import 'package:windaicapp/utility/mystyle.dart';
 import 'package:windaicapp/widget/informationuser.dart';
+import 'package:windaicapp/widget/list_job_for_user.dart';
 
 class MyServiceUser extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class MyServiceUser extends StatefulWidget {
 class _MyServiceUserState extends State<MyServiceUser> {
   String nameLogin;
 
-  Widget currentWidget = InformationUser();
+  Widget currentWidget = ListJobForUser();
 
   @override
   void initState() {

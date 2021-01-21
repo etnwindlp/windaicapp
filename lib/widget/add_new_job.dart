@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:windaicapp/models/job_model.dart';
 import 'package:windaicapp/models/usermodel.dart';
 import 'package:windaicapp/utility/dialog.dart';
 import 'package:windaicapp/utility/myconstant.dart';
@@ -89,6 +91,7 @@ class _AddNewJobState extends State<AddNewJob> {
         if ((title?.isEmpty ?? true) || (todo?.isEmpty ?? true)) {
           normalDialog(context, 'Have Space ? Please fill every blank');
         } else if (checkChooseUser()) {
+          addNewJobThread();
         } else {
           normalDialog(context, 'Non assign user ? Please choose user');
         }
@@ -132,5 +135,48 @@ class _AddNewJobState extends State<AddNewJob> {
       }
     }
     return result;
+  }
+
+  Future<Null> addNewJobThread() async {
+    String status = 'assign';
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    idofficer = preferences.getString('id');
+    nameofficer = preferences.getString(MyConstant().keyName);
+    print('idofficer = $idofficer, nameofficer = $nameofficer');
+    print('chooseUser = $chooseUsers');
+
+    List<JobModel> jobModels = List();
+    int index = 0;
+
+    for (var item in chooseUsers) {
+      if (item) {
+        JobModel model = JobModel(
+          idofficer: idofficer,
+          nameofficer: nameofficer,
+          iduser: userModels[index].id,
+          nameuser: userModels[index].name,
+          title: title,
+          todo: todo,
+          status: status,
+        );
+
+        jobModels.add(model);
+      }
+
+      index++;
+    }
+
+    int index2 = 0;
+
+    for (var item in jobModels) {
+      String path =
+          '${MyConstant().domain}/aic/addJob.php?isAdd=true&idofficer=$idofficer&nameofficer=$nameofficer&iduser=${item.iduser}&nameuser=${item.nameuser}&title=$title&todo=$todo';
+      await Dio().get(path).then((value) {
+        if (index2 >= jobModels.length - 1) {
+          Navigator.pop(context);
+        }
+      });
+      index2++;
+    }
   }
 }
